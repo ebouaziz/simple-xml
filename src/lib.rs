@@ -27,12 +27,12 @@
 //! ```
 //! For more example, see the tests
 
-use std::collections::HashMap;
 use std::fs::File;
 use std::io;
 use std::io::Write;
 use std::path::Path;
 use std::{fmt, ops};
+use linked_hash_map::LinkedHashMap;
 
 mod split_unquoted;
 use split_unquoted::SplitUnquoted;
@@ -44,8 +44,8 @@ pub use error::ParseError;
 #[derive(Debug)]
 pub struct Node {
     pub tag: String,
-    pub attributes: HashMap<String, String>,
-    nodes: HashMap<String, Vec<Node>>,
+    pub attributes: LinkedHashMap<String, String>,
+    nodes: LinkedHashMap<String, Vec<Node>>,
     pub content: String,
 }
 
@@ -61,8 +61,8 @@ fn validate_root(root: Result<Payload, Error>) -> Result<Node, Error> {
         Ok(v) => Ok(v.node.unwrap_or(Node {
             tag: String::new(),
             content: String::new(),
-            nodes: HashMap::new(),
-            attributes: HashMap::new(),
+            nodes: LinkedHashMap::new(),
+            attributes: LinkedHashMap::new(),
         })),
         Err(e) => Err(e),
     }
@@ -84,19 +84,19 @@ pub fn from_string(string: &str) -> Result<Node, Error> {
 /// Tag is not taken owned as it is most often a string literal
 pub fn new(tag: &str, content: String) -> Node {
     Node {
-        attributes: HashMap::new(),
+        attributes: LinkedHashMap::new(),
         content,
         tag: tag.to_owned(),
-        nodes: HashMap::new(),
+        nodes: LinkedHashMap::new(),
     }
 }
 
 /// Creates a new node with given tag, attributes content, and child nodes
 pub fn new_filled(
     tag: &str,
-    attributes: HashMap<String, String>,
+    attributes: LinkedHashMap<String, String>,
     content: String,
-    nodes: HashMap<String, Vec<Node>>,
+    nodes: LinkedHashMap<String, Vec<Node>>,
 ) -> Node {
     Node {
         tag: tag.to_owned(),
@@ -156,7 +156,7 @@ fn load_from_slice(string: &str) -> Result<Payload, Error> {
         return load_from_slice(&string[closing_del + 1..]);
     }
 
-    let mut attributes = HashMap::new();
+    let mut attributes = LinkedHashMap::new();
     for part in tag_parts {
         let equal_sign = match part.find('=') {
             Some(v) => v,
@@ -189,7 +189,7 @@ fn load_from_slice(string: &str) -> Result<Payload, Error> {
             prolog,
             node: Some(Node {
                 tag: tag_name.to_owned(),
-                nodes: HashMap::new(),
+                nodes: LinkedHashMap::new(),
                 attributes,
                 content: String::new(),
             }),
@@ -209,7 +209,7 @@ fn load_from_slice(string: &str) -> Result<Payload, Error> {
     };
 
     let mut content = String::with_capacity(512);
-    let mut nodes = HashMap::new();
+    let mut nodes = LinkedHashMap::new();
 
     // Load the inside contents and nodes
     let mut buf = &string[closing_del + 1..closing_tag];
