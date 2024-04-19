@@ -413,3 +413,12 @@ impl ops::Index<&str> for Node {
         }
     }
 }
+
+impl ops::IndexMut<&str> for Node {
+    fn index_mut(&mut self, tag: &str) -> &mut Self::Output {
+        match self.nodes.get_mut(tag) {
+            Some(v) => v,
+            None => &mut [],
+        }
+    }
+}
