@@ -307,6 +307,11 @@ impl Node {
         self.add_node(new(tag, content));
     }
 
+    /// Empties all child nodes of the current node
+    pub fn empty_nodes(&mut self) {
+        self.nodes.clear();
+    }
+
     /// This writes an xml structure to a file specified by path
     /// Uses the non-pretty to_string formatting
     pub fn save_to_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
