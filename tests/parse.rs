@@ -45,6 +45,12 @@ mod tests {
     }
 
     #[test]
+    fn parse_whitespaces_around_equal() {
+        let _comment = simple_xml::from_file("examples/whitespaces_around_equal.xml")
+            .expect("Failed to parse whitespaces_around_equal.xml");
+    }
+
+    #[test]
     fn parse_graph() {
         let graph =
             simple_xml::from_file("./examples/graph.xml").expect("Failed to parse graph.xml");

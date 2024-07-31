@@ -142,8 +142,14 @@ fn load_from_slice(string: &str) -> Result<Payload, Error> {
         closing_del
     };
 
+    // Replace all whitespace around = with just =
+    let attr_str = regex::Regex::new(r"\s*=\s*")
+        .unwrap()
+        .replace_all(&string[opening_del + 1..attr_end], "=")
+        .to_string();
+
     let mut tag_parts =
-        SplitUnquoted::split(&string[opening_del + 1..attr_end], |c| c.is_whitespace());
+        SplitUnquoted::split(&attr_str, |c| c.is_whitespace());
 
     let tag_name = tag_parts.next().unwrap().trim();
 

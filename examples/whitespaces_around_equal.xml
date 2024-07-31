@@ -1,0 +1,11 @@
+<test>
+    <message lang ="eng">
+        <heading>Hello from XML</heading>
+    </message>
+    <message lang= "fra">
+        <heading>Bonjour du XML</heading>
+    </message>
+    <message lang  =   "spa">
+        <heading>Hola desde XML</heading>
+    </message>
+</test>
